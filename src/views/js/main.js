@@ -504,7 +504,7 @@ window.requestAnimationFrame(function() {
     console.log(document.body.scrollTop);
     var left;
     for (var i = 0; i < items.length; i++) {
-        left = items[i].basicLeft
+        left = items[i].basicLeft;
         items[i].style.left = left + 100 * phase(tops + (i % 5)) + 'px';
     }
 });
