@@ -1,0 +1,27 @@
+{
+  "name": "frontend-nanodegree-mobile-portfolio",
+  "version": "1.0.0",
+  "description": "Portfolio optimization",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frenchfulton94/frontend-nanodegree-mobile-portfolio.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frenchfulton94/frontend-nanodegree-mobile-portfolio/issues"
+  },
+  "homepage": "https://github.com/frenchfulton94/frontend-nanodegree-mobile-portfolio#readme",
+  "devDependencies": {
+    "cssnano": "^3.10.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-uglify": "^3.0.1",
+    "grunt-postcss": "^0.8.0",
+    "pagespeed": "0.0.5",
+    "pagespeed-insights": "^1.0.2"
+  }
+}
