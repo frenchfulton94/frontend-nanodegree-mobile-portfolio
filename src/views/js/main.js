@@ -402,6 +402,8 @@ var pizzaElementGenerator = function (i) {
 var resizePizzas = function (size) {
     window.performance.mark("mark_start_resize"); // User Timing API function
 
+
+
     // Changes the value for the size of the pizza above the slider
     function changeSliderLabel(size) {
         switch (size) {
@@ -421,6 +423,10 @@ var resizePizzas = function (size) {
 
     changeSliderLabel(size);
 
+    // Removed the functions determineDx and moved its functionality into changePizzaSizes
+    //  Reduced repetitive iterations of document.querySelectorAll(".randomPizzaContainer")
+    //  Removed sizeSwitcher function and kept functionality
+
 
     // Iterates through pizza elements on the page and changes their widths
     function changePizzaSizes(size) {
@@ -428,22 +434,24 @@ var resizePizzas = function (size) {
         var oldWidth = elem[0].offsetWidth;
         var windowWidth = document.querySelector("#randomPizzas").offsetWidth;
         var oldSize = oldWidth / windowWidth;
-
+        var newSize;
         // Changes the slider value to a percent width
-        function sizeSwitcher(size) {
-            switch (size) {
-                case "1":
-                    return 0.25;
-                case "2":
-                    return 0.3333;
-                case "3":
-                    return 0.5;
-                default:
-                    console.log("bug in sizeSwitcher");
-            }
+
+        switch (size) {
+            case "1":
+                newSize = 0.25;
+                break;
+            case "2":
+                newSize = 0.3333;
+                break;
+            case "3":
+                newSize = 0.5;
+                break;
+            default:
+                console.log("bug in sizeSwitcher");
         }
 
-        var newSize = sizeSwitcher(size);
+        // Moved dx and newwidth evaluation outside of for loop
         var dx = (newSize - oldSize) * windowWidth;
         var newwidth = (elem[0].offsetWidth + dx) + 'px';
         for (var i = 0; i < elem.length; i++) {
@@ -462,6 +470,7 @@ var resizePizzas = function (size) {
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
+// Moved pizzasDiv initiation outside the for loop
 // This for-loop actually creates and appends all of the pizzas when the page loads
 var pizzasDiv = document.getElementById("randomPizzas");
 for (var i = 2; i < 100; i++) {
@@ -495,19 +504,24 @@ function logAverageFrame(times) { // times is the array of User Timing measureme
 function updatePositions() {
     frame++;
     window.performance.mark("mark_start_frame");
-window.requestAnimationFrame(function() {
-    var items = document.querySelectorAll('.mover');
-    var phase = function(math){ 
-        return Math.sin(math);
-    };
-    var tops = (document.body.scrollTop / 1250);
-    console.log(document.body.scrollTop);
-    var left;
-    for (var i = 0; i < items.length; i++) {
-        left = items[i].basicLeft;
-        items[i].style.left = left + 100 * phase(tops + (i % 5)) + 'px';
-    }
-});
+
+    // Moved pizza animation into callback for requestAnimationFrame function
+    window.requestAnimationFrame(function () {
+        var items = document.querySelectorAll('.mover');
+
+        // Moved taxing non iterative depedent evaluations out side of the for loop
+        var tops = (document.body.scrollTop / 1250);
+        var phase = [];
+
+        // Followed given suggestion from reviewer
+        for (var i = 0; i < 5; i++) {
+            phase.push(Math.sin(tops + i) * 100);
+        }
+
+        for (i = 0; i < items.length; i++) {
+            items[i].style.left = items[i].basicLeft + phase[i % 5] + 'px';
+        }
+    });
 
     // User Timing API to the rescue again. Seriously, it's worth learning.
     // Super easy to create custom metrics.
@@ -527,9 +541,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var cols = 8;
     var s = 256;
     var elem;
+    // follow reviewers suggestion
+    var height = window.innerHeight;
+    var numOfPizzas = height / s * cols;
 
-
-    for (var i = 0; i < 40; i++) {
+    for (var i = 0; i < numOfPizzas; i++) {
         elem = document.createElement('img');
         elem.className = 'mover';
         elem.src = "images/pizza.png";
